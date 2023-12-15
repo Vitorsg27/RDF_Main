@@ -35,7 +35,7 @@ class CardapioPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user): bool
+    public function update(User $user, Cardapio $cardapio): bool
     {
         return auth()->check();
     }
@@ -45,7 +45,7 @@ class CardapioPolicy
      */
     public function delete(User $user, Cardapio $cardapio): bool
     {
-        //
+        return auth()->check();
     }
 
     /**

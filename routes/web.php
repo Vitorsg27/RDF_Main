@@ -39,7 +39,7 @@ Route::middleware('auth')->group(function () {
 Route::get('/cardapio', [CardapioController::class, 'index'])->name('cardapio.index');
 
 Route::resource('cardapio', CardapioController::class)
-    ->only(['store', 'update'])
+    ->only(['store', 'update', 'destroy'])
     ->middleware(['auth', 'verified']);
 
 require __DIR__.'/auth.php';

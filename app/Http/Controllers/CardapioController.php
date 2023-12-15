@@ -16,9 +16,11 @@ class CardapioController extends Controller
     public function index(): Response
     {
         $items = Cardapio::all();
+        $categorias = $items->pluck('categoria')->unique()->values()->all();
         
         return Inertia::render('Cardapio/Index',[
             'items' => $items,
+            'categorias' => $categorias,
         ]);
     }
 
@@ -71,6 +73,7 @@ class CardapioController extends Controller
         $this->authorize('update', $cardapio);
  
         $validated = $request->validate([
+            'nome' => 'required|string|max:255',
             'descricao' => 'required|string|max:255',
             'categoria' => 'required|string|max:255',
             'preco' => 'required|numeric|min:0.01|max:999.99',
@@ -84,8 +87,12 @@ class CardapioController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Cardapio $cardapio)
+    public function destroy(Cardapio $cardapio): RedirectResponse
     {
-        //
+        $this->authorize('delete', $cardapio);
+
+        $cardapio->delete();
+
+        return redirect(route('cardapio.index'));
     }
 }
