@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\CardapioController;
+use App\Http\Controllers\MesaController;
+use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -40,6 +42,14 @@ Route::get('/cardapio', [CardapioController::class, 'index'])->name('cardapio.in
 
 Route::resource('cardapio', CardapioController::class)
     ->only(['store', 'update', 'destroy'])
+    ->middleware(['auth', 'verified']);
+
+Route::resource('mesa', MesaController::class)
+    ->only(['index', 'store', 'update', 'destroy'])
+    ->middleware(['auth', 'verified']);
+
+Route::resource('pedido', PedidoController::class)
+    ->only(['index', 'store', 'update', 'destroy'])
     ->middleware(['auth', 'verified']);
 
 require __DIR__.'/auth.php';

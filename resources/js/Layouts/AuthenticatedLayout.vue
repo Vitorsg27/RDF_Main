@@ -35,6 +35,12 @@ const showingNavigationDropdown = ref(false);
                                 <NavLink :href="route('cardapio.index')" :active="route().current('cardapio.index')">
                                     Cardapio
                                 </NavLink>
+                                <NavLink :href="route('mesa.index')" :active="route().current('mesa.index')">
+                                    Mesas
+                                </NavLink>
+                                <NavLink :href="route('pedido.index')" :active="route().current('pedido.index')">
+                                    Pedidos
+                                </NavLink>
                             </div>
                         </div>
 
@@ -120,6 +126,12 @@ const showingNavigationDropdown = ref(false);
                         </ResponsiveNavLink>
                         <ResponsiveNavLink :href="route('cardapio.index')" :active="route().current('cardapio.index')">
                             Cardapio
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink :href="route('mesa.index')" :active="route().current('mesa.index')">
+                            Mesas
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink :href="route('pedido.index')" :active="route().current('pedido.index')">
+                            Pedidos
                         </ResponsiveNavLink>
                     </div>
 
