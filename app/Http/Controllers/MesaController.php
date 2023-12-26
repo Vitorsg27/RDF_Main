@@ -14,9 +14,10 @@ class MesaController extends Controller
      * Display a listing of the resource.
      */
     public function index(): Response
-    {
+    {   
+        $mesas = Mesa::all();
         return Inertia::render('Mesa/Index', [
-            //
+            'mesas' => $mesas
         ]);
     }
 
@@ -31,9 +32,15 @@ class MesaController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
-        //
+        $validated = $request->validate([
+            'disponivel' => 'required|boolean',
+        ]);
+
+        Mesa::create($validated);
+ 
+        return redirect(route('mesa.index'));
     }
 
     /**
@@ -57,14 +64,26 @@ class MesaController extends Controller
      */
     public function update(Request $request, Mesa $mesa)
     {
-        //
+        $this->authorize('update', $mesa);
+ 
+        $validated = $request->validate([
+            'disponivel' => 'required|boolean',
+        ]);
+ 
+        $mesa->update($validated);
+ 
+        return redirect(route('mesa.index'));
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Mesa $mesa)
+    public function destroy(Mesa $mesa): RedirectResponse
     {
-        //
+        $this->authorize('delete', $mesa);
+
+        $mesa->delete();
+
+        return redirect(route('mesa.index'));
     }
 }
