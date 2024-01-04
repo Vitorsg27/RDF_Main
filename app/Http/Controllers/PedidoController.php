@@ -15,8 +15,9 @@ class PedidoController extends Controller
      */
     public function index(): Response
     {
+        $pedidos = Pedido::all();
         return Inertia::render('Pedido/Index', [
-            //
+            'pedidos' => $pedidos
         ]);
     }
 
@@ -33,7 +34,13 @@ class PedidoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'disponivel' => 'required|boolean',
+        ]);
+
+        Pedido::create($validated);
+ 
+        return redirect(route('pedido.index'));
     }
 
     /**
@@ -57,7 +64,15 @@ class PedidoController extends Controller
      */
     public function update(Request $request, Pedido $pedido)
     {
-        //
+        $this->authorize('update', $pedido);
+ 
+        $validated = $request->validate([
+            'disponivel' => 'required|boolean',
+        ]);
+ 
+        $pedido->update($validated);
+ 
+        return redirect(route('mesa.index'));
     }
 
     /**
@@ -65,6 +80,10 @@ class PedidoController extends Controller
      */
     public function destroy(Pedido $pedido)
     {
-        //
+        $this->authorize('delete', $pedido);
+
+        $pedido->delete();
+
+        return redirect(route('pedido.index'));
     }
 }
