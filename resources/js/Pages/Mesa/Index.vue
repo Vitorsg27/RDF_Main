@@ -19,7 +19,6 @@ const editing = ref(false);
     <Head title="Mesas" />
 
     <AuthenticatedLayout>
-        <span>{{mesas}}</span>
         <div class="max-w-2xl mx-auto p-4 sm:p-6 lg:p-8">
             <form v-if="editing"
                 @submit.prevent="form.post(route('mesa.store'), { onSuccess: () => { form.reset(); editing = false; } })">

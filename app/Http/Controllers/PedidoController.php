@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pedido;
+use App\Models\Cardapio;
+use App\Models\Mesa;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -16,8 +18,12 @@ class PedidoController extends Controller
     public function index(): Response
     {
         $pedidos = Pedido::all();
+        $cardapio = Cardapio::all();
+        $mesas = Mesa::all();
         return Inertia::render('Pedido/Index', [
-            'pedidos' => $pedidos
+            'items' => $pedidos,
+            'produtos' => $cardapio,
+            'mesas' => $mesas
         ]);
     }
 
@@ -35,8 +41,14 @@ class PedidoController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'disponivel' => 'required|boolean',
+            'mesa_id' => 'required|exists:mesas,id|numeric',
+            'itens' => 'required|array',
+            'itens.*.nome' => 'required|string|max:255',
+            'itens.*.quantidade' => 'required|numeric|min:1',
+            'itens.*.preco' => 'required|numeric|min:0.01',
         ]);
+
+        $validated['itens'] = json_encode($validated['itens']);
 
         Pedido::create($validated);
  
@@ -64,15 +76,19 @@ class PedidoController extends Controller
      */
     public function update(Request $request, Pedido $pedido)
     {
-        $this->authorize('update', $pedido);
- 
         $validated = $request->validate([
-            'disponivel' => 'required|boolean',
+            'mesa_id' => 'required|exists:mesas,id|numeric',
+            'itens' => 'required|array',
+            'itens.*.nome' => 'required|string|max:255',
+            'itens.*.quantidade' => 'required|numeric|min:1',
+            'itens.*.preco' => 'required|numeric|min:0.01',
         ]);
- 
+    
+        $validated['itens'] = json_encode($validated['itens']);
+    
         $pedido->update($validated);
- 
-        return redirect(route('mesa.index'));
+    
+        return redirect(route('pedido.index'));
     }
 
     /**
