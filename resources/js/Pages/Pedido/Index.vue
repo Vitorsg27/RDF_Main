@@ -6,7 +6,7 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import { useForm, Head } from '@inertiajs/vue3';
 import { ref } from 'vue';
 
-defineProps(['items', 'produtos', 'mesas']);
+defineProps(['pedidos', 'produtos', 'mesas']);
 
 const form = useForm({
     itens: {
@@ -14,7 +14,7 @@ const form = useForm({
         quantidade: 0,
         preco: 0,
     },
-    mesa_id: 0,
+    mesa_id: "",
 });
 
 const editing = ref(false);
@@ -24,6 +24,7 @@ const editing = ref(false);
     <Head title="Pedidos" />
 
     <AuthenticatedLayout>
+        <span>{{pedidos}}</span>
         <div class="max-w-2xl mx-auto p-4 sm:p-6 lg:p-8">
             <form v-if="editing"
                 @submit.prevent="form.post(route('pedido.store'), { onSuccess: () => { form.reset(); editing = false; } })">
@@ -55,7 +56,7 @@ const editing = ref(false);
             </form>
             <PrimaryButton v-if="editing == false" @click="editing = true" class="mt-4 ml-4">Novo Pedido</PrimaryButton>
             <div class="mt-6 bg-white shadow-sm rounded-lg divide-y">
-                <Pedido v-for="item in items" :key="item.id" :item="item" />
+                <Pedido v-for="pedido in pedidos" :key="pedido.id" :pedido="pedido" />
             </div>
         </div>
     </AuthenticatedLayout>

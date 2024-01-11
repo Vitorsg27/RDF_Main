@@ -7,11 +7,11 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import { useForm } from '@inertiajs/vue3';
 import { ref, computed } from 'vue';
 
-const props = defineProps(['item']);
+const props = defineProps(['pedido']);
 
 const form = useForm({
-    mesa_id: props.item.mesa_id,
-    itens: JSON.parse(props.item.itens),
+    mesa_id: props.pedido.mesa_id,
+    itens: JSON.parse(props.pedido.itens),
 });
 
 const editing = ref(false);
@@ -22,9 +22,9 @@ const editing = ref(false);
         <div class="flex-1">
             <div class="flex justify-between items-center">
                 <div>
-                    <span class="text-gray-800">{{ item.id }}</span>
-                    <small class="ml-2 text-sm text-gray-600">{{ new Date(mesa.created_at).toLocaleString() }}</small>
-                    <small v-if="item.created_at !== item.updated_at" class="text-sm text-gray-600"> &middot; edited</small>
+                    <span class="text-gray-800">{{ pedido.id }}</span>
+                    <small class="ml-2 text-sm text-gray-600">{{ new Date(pedido.created_at).toLocaleString() }}</small>
+                    <small v-if="pedido.created_at !== pedido.updated_at" class="text-sm text-gray-600"> &middot; edited</small>
                 </div>
                 <Dropdown>
                     <template #trigger>
@@ -62,8 +62,8 @@ const editing = ref(false);
                 </div>
             </form>
             <div v-else>
-                <p class="mt-4 text-lg text-gray-900">{{ item.mesa_id }}</p>
-                <p class="mt-4 text-lg text-gray-900">{{ item.itens }}</p>
+                <p class="mt-4 text-lg text-gray-900">{{ pedido.mesa_id }}</p>
+                <p class="mt-4 text-lg text-gray-900">{{ pedido.itens }}</p>
             </div>
         </div>
     </div>
