@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('mesa_id')->constrained();
             $table->json('itens');
+            $table->boolean('aberto')->default(true);
             $table->timestamps();
         });
     }
