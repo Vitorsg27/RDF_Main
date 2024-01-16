@@ -43,9 +43,9 @@ class PedidoController extends Controller
         $validated = $request->validate([
             'mesa_id' => 'required|exists:mesas,id|numeric',
             'itens' => 'required|array',
-            'itens.nome' => 'required|string|max:255',
-            'itens.quantidade' => 'required|numeric|min:1',
-            'itens.preco' => 'required|numeric|min:0.01',
+            'itens.*.nome' => 'required|string|max:255',
+            'itens.*.quantidade' => 'required|numeric|min:1',
+            'itens.*.preco' => 'required|numeric|min:0.01',
         ]);
 
         $validated['itens'] = json_encode($validated['itens']);
@@ -79,9 +79,9 @@ class PedidoController extends Controller
         $validated = $request->validate([
             'mesa_id' => 'required|exists:mesas,id|numeric',
             'itens' => 'required|array',
-            'itens.nome' => 'required|string|max:255',
-            'itens.quantidade' => 'required|numeric|min:1',
-            'itens.preco' => 'required|numeric|min:0.01',
+            'itens.*.nome' => 'required|string|max:255',
+            'itens.*.quantidade' => 'required|numeric|min:1',
+            'itens.*.preco' => 'required|numeric|min:0.01',
         ]);
     
         $validated['itens'] = json_encode($validated['itens']);
