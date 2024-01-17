@@ -7,12 +7,20 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import { useForm } from '@inertiajs/vue3';
 import { ref, computed } from 'vue';
 
-const props = defineProps(['pedido']);
+const props = defineProps(['pedido', 'produtos', 'mesas']);
 
 const form = useForm({
-    mesa_id: props.pedido.mesa_id,
     itens: JSON.parse(props.pedido.itens),
+    mesa_id: props.pedido.mesa_id,
 });
+
+const adicionarItemVazio = () => {
+    form.itens.push({ nome: "", quantidade: 0, preco: 0 });
+};
+
+const removerItem = (index) => {
+    form.itens.splice(index, 1);
+};
 
 const editing = ref(false);
 </script>
@@ -22,9 +30,10 @@ const editing = ref(false);
         <div class="flex-1">
             <div class="flex justify-between items-center">
                 <div>
-                    <span class="text-gray-800">{{ pedido.id }}</span>
+                    <span class="text-gray-800">ID: {{ pedido.id }}</span>
                     <small class="ml-2 text-sm text-gray-600">{{ new Date(pedido.created_at).toLocaleString() }}</small>
-                    <small v-if="pedido.created_at !== pedido.updated_at" class="text-sm text-gray-600"> &middot; edited</small>
+                    <small v-if="pedido.created_at !== pedido.updated_at" class="text-sm text-gray-600"> &middot;
+                        edited</small>
                 </div>
                 <Dropdown>
                     <template #trigger>
@@ -50,11 +59,35 @@ const editing = ref(false);
             </div>
             <form v-if="editing"
                 @submit.prevent="form.put(route('pedido.update', pedido.id), { onSuccess: () => editing = false })">
-                <span>Disponibilidade</span>
-                <textarea v-model="form.itens"
-                    class="mt-4 w-full text-gray-900 border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"></textarea>
-                <input v-model="form.mesa_id" type="number" step="1.0" max="999" min="1.0"
-                    class="mt-4 w-full text-gray-900 border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm" />
+                <div v-for="(item, index) in form.itens" :key="index" class="mt-4">
+                    <select v-model="item.nome" required placeholder="Nome prato"
+                        class="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
+                        <option value="" disabled selected hidden>Selecione um produto</option>
+                        <option v-for="produto in produtos" :key="produto.id" :value="produto.nome">
+                            {{ produto.nome }}
+                        </option>
+                    </select>
+                    <span>quantidade</span>
+                    <input v-model="item.quantidade" placeholder="Quantidade" required
+                        class="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"
+                        type="number" step="1" min="1" />
+                    <span>preço</span>
+                    <input v-model="item.preco" placeholder="Preço" required
+                        class="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"
+                        type="number" step="0.01" min="0.01" />
+                    <button @click="removerItem(index)" class="mt-2 class=inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">Remover Item</button>
+                </div>
+                <div class="space-x-2">
+                    <button @click="adicionarItemVazio" class="mt-6 class=inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">Adicionar Item</button>
+                </div>
+                <div class="mt-4">Mesa</div>
+                <select v-model="form.mesa_id" required
+                    class="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
+                    <option value="pedido.mesa_id" disabled selected hidden>Selecione a mesa</option>
+                    <option v-for="mesa in mesas" :key="mesa.id" :value="mesa.id">
+                        {{ mesa.id }}
+                    </option>
+                </select>
                 <InputError :message="form.errors.message" class="mt-2" />
                 <div class="space-x-2">
                     <PrimaryButton class="mt-4">Save</PrimaryButton>
@@ -62,8 +95,12 @@ const editing = ref(false);
                 </div>
             </form>
             <div v-else>
-                <p class="mt-4 text-lg text-gray-900">{{ pedido.mesa_id }}</p>
-                <p class="mt-4 text-lg text-gray-900">{{ pedido.itens }}</p>
+                <p class="mt-4 text-lg text-gray-900">Itens do Pedido:</p>
+                <ul>
+                    <li v-for="(item, index) in form.itens" :key="index">
+                        {{ item.nome }} - Quantidade: {{ item.quantidade }} - Preço: {{ item.preco }}
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
