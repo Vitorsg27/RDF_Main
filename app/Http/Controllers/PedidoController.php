@@ -46,6 +46,7 @@ class PedidoController extends Controller
             'itens.*.nome' => 'required|string|max:255',
             'itens.*.quantidade' => 'required|numeric|min:1',
             'itens.*.preco' => 'required|numeric|min:0.01',
+            'itens.*.observacao' => 'nullable|string',
         ]);
 
         $validated['itens'] = json_encode($validated['itens']);
