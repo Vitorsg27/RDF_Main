@@ -32,7 +32,6 @@ const editing = ref(false);
     <Head title="Pedidos" />
 
     <AuthenticatedLayout>
-        <!-- <span>{{pedidos}}</span> -->
         <div class="max-w-2xl mx-auto p-4 sm:p-6 lg:p-8">
             <form v-if="editing"
                 @submit.prevent="form.post(route('pedido.store'), { onSuccess: () => { form.reset(); editing = false; } })">
@@ -52,6 +51,9 @@ const editing = ref(false);
                     <input v-model="item.preco" placeholder="Preço" required
                         class="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"
                         type="number" step="0.01" min="0.01" />
+                    <input v-model="item.observacao" placeholder="Observacao"
+                        class="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"
+                        type="text" />
                     <button @click="removerItem(index)" class="mt-2">Remover Item</button>
                 </div>
                 <button @click="adicionarItemVazio" class="mt-4">Adicionar Item</button>

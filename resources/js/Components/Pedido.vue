@@ -12,6 +12,7 @@ const props = defineProps(['pedido', 'produtos', 'mesas']);
 const form = useForm({
     itens: JSON.parse(props.pedido.itens),
     mesa_id: props.pedido.mesa_id,
+    aberto: props.pedido.aberto,
 });
 
 const adicionarItemVazio = () => {
@@ -31,6 +32,7 @@ const editing = ref(false);
             <div class="flex justify-between items-center">
                 <div>
                     <span class="text-gray-800">ID: {{ pedido.id }}</span>
+                    <span class="text-gray-800">Aberto: {{ pedido.aberto }}</span>
                     <small class="ml-2 text-sm text-gray-600">{{ new Date(pedido.created_at).toLocaleString() }}</small>
                     <small v-if="pedido.created_at !== pedido.updated_at" class="text-sm text-gray-600"> &middot;
                         edited</small>
@@ -60,9 +62,9 @@ const editing = ref(false);
             <form v-if="editing"
                 @submit.prevent="form.put(route('pedido.update', pedido.id), { onSuccess: () => editing = false })">
                 <div v-for="(item, index) in form.itens" :key="index" class="mt-4">
+                    <span>Produto</span>
                     <select v-model="item.nome" required placeholder="Nome prato"
                         class="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
-                        <option value="" disabled selected hidden>Selecione um produto</option>
                         <option v-for="produto in produtos" :key="produto.id" :value="produto.nome">
                             {{ produto.nome }}
                         </option>
@@ -75,10 +77,17 @@ const editing = ref(false);
                     <input v-model="item.preco" placeholder="Preço" required
                         class="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"
                         type="number" step="0.01" min="0.01" />
-                    <button @click="removerItem(index)" class="mt-2 class=inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">Remover Item</button>
+                    <input v-model="item.observacao" placeholder="Observacao"
+                        class="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"
+                        type="text"/>
+                    <button @click="removerItem(index)"
+                        class="mt-2 class=inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">Remover
+                        Item</button>
                 </div>
                 <div class="space-x-2">
-                    <button @click="adicionarItemVazio" class="mt-6 class=inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">Adicionar Item</button>
+                    <button @click="adicionarItemVazio"
+                        class="mt-6 class=inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">Adicionar
+                        Item</button>
                 </div>
                 <div class="mt-4">Mesa</div>
                 <select v-model="form.mesa_id" required
@@ -98,10 +107,9 @@ const editing = ref(false);
                 <p class="mt-4 text-lg text-gray-900">Itens do Pedido:</p>
                 <ul>
                     <li v-for="(item, index) in form.itens" :key="index">
-                        {{ item.nome }} - Quantidade: {{ item.quantidade }} - Preço: {{ item.preco }}
+                        {{ item.nome }} - Quantidade: {{ item.quantidade }} - Preço: {{ item.preco }} <span v-if="item.observacao"> - Observacao: {{ item.observacao }}</span>
                     </li>
                 </ul>
             </div>
-        </div>
     </div>
-</template>
+</div></template>
