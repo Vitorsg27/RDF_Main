@@ -11,18 +11,26 @@ defineProps(['pedidos', 'produtos', 'mesas']);
 const form = useForm({
     itens: [{
         nome: "",
-        quantidade: 0,
+        quantidade: 1,
         preco: 0,
     }],
     mesa_id: "",
 });
 
 const adicionarItemVazio = () => {
-    form.itens.push({ nome: "", quantidade: 0, preco: 0 });
+    form.itens.push({ nome: "", quantidade: 1, preco: 0 });
 };
 
 const removerItem = (index) => {
     form.itens.splice(index, 1);
+};
+
+const atualizarPreco = (index, produtos) => {
+    const produtoSelecionado = produtos.find(produto => produto.nome === form.itens[index].nome);
+
+    if (produtoSelecionado) {
+        form.itens[index].preco = produtoSelecionado.preco;
+    }
 };
 
 const editing = ref(false);
@@ -33,10 +41,10 @@ const editing = ref(false);
 
     <AuthenticatedLayout>
         <div class="max-w-2xl mx-auto p-4 sm:p-6 lg:p-8">
-            <form v-if="editing"
+            <form v-if="editing" class="bg-white shadow-sm rounded-lg p-4"
                 @submit.prevent="form.post(route('pedido.store'), { onSuccess: () => { form.reset(); editing = false; } })">
                 <div v-for="(item, index) in form.itens" :key="index" class="mt-4">
-                    <select v-model="item.nome" required placeholder="Nome prato"
+                    <select v-model="item.nome" @change="atualizarPreco(index, produtos)" required placeholder="Nome prato"
                         class="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
                         <option value="" disabled selected hidden>Selecione um produto</option>
                         <option v-for="produto in produtos" :key="produto.id" :value="produto.nome">
@@ -51,7 +59,8 @@ const editing = ref(false);
                     <input v-model="item.preco" placeholder="Preço" required
                         class="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"
                         type="number" step="0.01" min="0.01" />
-                    <input v-model="item.observacao" placeholder="Observacao"
+                    <span>Observação</span>
+                    <input v-model="item.observacao" placeholder="..."
                         class="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"
                         type="text" />
                     <button @click="removerItem(index)" class="mt-2">Remover Item</button>

@@ -16,11 +16,19 @@ const form = useForm({
 });
 
 const adicionarItemVazio = () => {
-    form.itens.push({ nome: "", quantidade: 0, preco: 0 });
+    form.itens.push({ nome: "", quantidade: 1, preco: 0 });
 };
 
 const removerItem = (index) => {
     form.itens.splice(index, 1);
+};
+
+const atualizarPreco = (index, produtos) => {
+    const produtoSelecionado = produtos.find(produto => produto.nome === form.itens[index].nome);
+
+    if (produtoSelecionado) {
+        form.itens[index].preco = produtoSelecionado.preco;
+    }
 };
 
 const editing = ref(false);
@@ -32,7 +40,7 @@ const editing = ref(false);
             <div class="flex justify-between items-center">
                 <div>
                     <span class="text-gray-800">ID: {{ pedido.id }}</span>
-                    <span class="text-gray-800">Aberto: {{ pedido.aberto }}</span>
+                    <span class="text-gray-800"> Aberto: {{ pedido.aberto? "Sim" : "Não" }}</span>
                     <small class="ml-2 text-sm text-gray-600">{{ new Date(pedido.created_at).toLocaleString() }}</small>
                     <small v-if="pedido.created_at !== pedido.updated_at" class="text-sm text-gray-600"> &middot;
                         edited</small>
@@ -61,27 +69,29 @@ const editing = ref(false);
             </div>
             <form v-if="editing"
                 @submit.prevent="form.put(route('pedido.update', pedido.id), { onSuccess: () => editing = false })">
-                <div v-for="(item, index) in form.itens" :key="index" class="mt-4">
+                <div v-for="(item, index) in form.itens" :key="index" class="mt-8 p-4 border-2 rounded-lg">
                     <span>Produto</span>
-                    <select v-model="item.nome" required placeholder="Nome prato"
-                        class="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
+                    <select v-model="item.nome" @change="atualizarPreco(index, produtos)" required placeholder="Nome prato"
+                        class="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mb-2">
+                        <option value="" disabled selected hidden>Selecione um produto</option>
                         <option v-for="produto in produtos" :key="produto.id" :value="produto.nome">
                             {{ produto.nome }}
                         </option>
                     </select>
                     <span>quantidade</span>
                     <input v-model="item.quantidade" placeholder="Quantidade" required
-                        class="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"
+                        class="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mb-2"
                         type="number" step="1" min="1" />
                     <span>preço</span>
                     <input v-model="item.preco" placeholder="Preço" required
-                        class="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"
+                        class="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mb-2"
                         type="number" step="0.01" min="0.01" />
-                    <input v-model="item.observacao" placeholder="Observacao"
-                        class="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"
-                        type="text"/>
+                    <span>Observação</span>
+                    <input v-model="item.observacao" placeholder="..."
+                        class="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mb-2"
+                        type="text" />
                     <button @click="removerItem(index)"
-                        class="mt-2 class=inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">Remover
+                        class="mt-2">Remover
                         Item</button>
                 </div>
                 <div class="space-x-2">
@@ -107,9 +117,11 @@ const editing = ref(false);
                 <p class="mt-4 text-lg text-gray-900">Itens do Pedido:</p>
                 <ul>
                     <li v-for="(item, index) in form.itens" :key="index">
-                        {{ item.nome }} - Quantidade: {{ item.quantidade }} - Preço: {{ item.preco }} <span v-if="item.observacao"> - Observacao: {{ item.observacao }}</span>
+                        {{ item.nome }} - Quantidade: {{ item.quantidade }} - Total: R$ {{ item.preco*item.quantidade }} <span
+                            v-if="item.observacao"> - Observacao: {{ item.observacao }}</span>
                     </li>
                 </ul>
             </div>
+        </div>
     </div>
-</div></template>
+</template>
