@@ -25,7 +25,8 @@ const editing = ref(false);
 
     <AuthenticatedLayout>
         <div class="max-w-2xl mx-auto p-4 sm:p-6 lg:p-8">
-            <form v-if="editing" @submit.prevent="form.post(route('cardapio.store'), { onSuccess: () => { form.reset(); editing = false; } })">
+            <form v-if="editing"
+                @submit.prevent="form.post(route('cardapio.store'), { onSuccess: () => { form.reset(); editing = false; } })">
                 <textarea v-model="form.nome" placeholder="Nome prato" required
                     class="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mb-1"></textarea>
                 <textarea v-model="form.descricao" placeholder="Descrição do prato" required
@@ -41,17 +42,16 @@ const editing = ref(false);
                     <button class="mt-4" @click="editing = false; form.reset(); form.clearErrors()">Cancel</button>
                 </div>
             </form>
-            <label for="categoria">Selecione uma categoria: </label>
-            <select v-model="categoriaSelecionada">
+            <PrimaryButton v-if="editing == false" @click="editing = true" class="mt-4">Novo Prato</PrimaryButton>
+            <select v-model="categoriaSelecionada"
+                class="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-6">
                 <option value="">Todas as Categorias</option>
                 <option v-for="categoria in categorias" :key="categoria" :value="categoria">
                     {{ categoria }}
                 </option>
             </select>
-            <PrimaryButton v-if="editing==false" @click="editing=true" class="mt-4 ml-4">Novo Prato</PrimaryButton>
-            <div class="mt-6 bg-white shadow-sm rounded-lg divide-y">
-                <Item v-for="item in items" :key="item.id" :item="item" :categoria="categoriaSelecionada"/>
+            <div class="mt-2 bg-white shadow-sm rounded-lg divide-y">
+                <Item v-for="item in items" :key="item.id" :item="item" :categoria="categoriaSelecionada" />
             </div>
         </div>
-    </AuthenticatedLayout>
-</template>
+    </AuthenticatedLayout></template>

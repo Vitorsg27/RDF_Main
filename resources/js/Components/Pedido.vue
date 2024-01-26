@@ -7,7 +7,7 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import { useForm } from '@inertiajs/vue3';
 import { ref, computed } from 'vue';
 
-const props = defineProps(['pedido', 'produtos', 'mesas']);
+const props = defineProps(['pedido', 'produtos', 'mesas', 'categoria']);
 
 const form = useForm({
     itens: JSON.parse(props.pedido.itens),
@@ -30,17 +30,18 @@ const atualizarPreco = (index, produtos) => {
         form.itens[index].preco = produtoSelecionado.preco;
     }
 };
+const semCategoria = computed(() => props.categoria === '');
 
 const editing = ref(false);
 </script>
  
 <template>
-    <div class="p-6 flex space-x-2">
+    <div v-if="semCategoria || pedido.aberto == categoria" class="p-6 flex space-x-2">
         <div class="flex-1">
             <div class="flex justify-between items-center">
                 <div>
                     <span class="text-gray-800">ID: {{ pedido.id }}</span>
-                    <span class="text-gray-800"> Aberto: {{ pedido.aberto? "Sim" : "Não" }}</span>
+                    <span class="text-gray-800"> Aberto: {{ pedido.aberto ? "Sim" : "Não" }}</span>
                     <small class="ml-2 text-sm text-gray-600">{{ new Date(pedido.created_at).toLocaleString() }}</small>
                     <small v-if="pedido.created_at !== pedido.updated_at" class="text-sm text-gray-600"> &middot;
                         edited</small>
@@ -90,8 +91,7 @@ const editing = ref(false);
                     <input v-model="item.observacao" placeholder="..."
                         class="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mb-2"
                         type="text" />
-                    <button @click="removerItem(index)"
-                        class="mt-2">Remover
+                    <button @click="removerItem(index)" class="mt-2">Remover
                         Item</button>
                 </div>
                 <div class="space-x-2">
@@ -107,6 +107,16 @@ const editing = ref(false);
                         {{ mesa.id }}
                     </option>
                 </select>
+                <span>Pedido ainda aberto? </span>
+                <select v-model="form.aberto" required
+                    class="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
+                    <option :key="'True'" :value="1">
+                        {{ 'Sim' }}
+                    </option>
+                    <option :key="'False'" :value="0">
+                        {{ 'Não' }}
+                    </option>
+                </select>
                 <InputError :message="form.errors.message" class="mt-2" />
                 <div class="space-x-2">
                     <PrimaryButton class="mt-4">Save</PrimaryButton>
@@ -114,11 +124,12 @@ const editing = ref(false);
                 </div>
             </form>
             <div v-else>
-                <p class="mt-4 text-lg text-gray-900">Itens do Pedido:</p>
+                <p class="mt-4 text-lg text-gray-900">Mesa: {{ form.mesa_id }}</p>
+                <p class="text-lg text-gray-900">Itens do Pedido:</p>
                 <ul>
                     <li v-for="(item, index) in form.itens" :key="index">
-                        {{ item.nome }} - Quantidade: {{ item.quantidade }} - Total: R$ {{ item.preco*item.quantidade }} <span
-                            v-if="item.observacao"> - Observacao: {{ item.observacao }}</span>
+                        {{ item.nome }} - Quantidade: {{ item.quantidade }} - Total: R$ {{ item.preco * item.quantidade }}
+                        <span v-if="item.observacao"> - Observação: {{ item.observacao }}</span>
                     </li>
                 </ul>
             </div>

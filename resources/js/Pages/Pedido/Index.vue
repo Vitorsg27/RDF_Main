@@ -33,6 +33,7 @@ const atualizarPreco = (index, produtos) => {
     }
 };
 
+const categoriaSelecionada = ref('1');
 const editing = ref(false);
 </script>
  
@@ -81,8 +82,18 @@ const editing = ref(false);
                 </div>
             </form>
             <PrimaryButton v-if="editing == false" @click="editing = true" class="mt-4 ml-4">Novo Pedido</PrimaryButton>
+            <select v-model="categoriaSelecionada"
+                class="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-6">
+                <option value="">Todos os Pedidos</option>
+                <option :value="1">
+                    {{ "Pedidos em aberto" }}
+                </option>
+                <option :value="0">
+                    {{ "Pedidos fechados" }}
+                </option>
+            </select>
             <div class="mt-6 bg-white shadow-sm rounded-lg divide-y">
-                <Pedido v-for="pedido in pedidos" :key="pedido.id" :pedido="pedido" :produtos="produtos" :mesas="mesas" />
+                <Pedido v-for="pedido in pedidos" :key="pedido.id" :pedido="pedido" :produtos="produtos" :mesas="mesas" :categoria="categoriaSelecionada"/>
             </div>
         </div>
     </AuthenticatedLayout>
