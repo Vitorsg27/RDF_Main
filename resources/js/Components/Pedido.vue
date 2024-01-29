@@ -30,6 +30,15 @@ const atualizarPreco = (index, produtos) => {
         form.itens[index].preco = produtoSelecionado.preco;
     }
 };
+
+const totalPedido = computed(() => {
+    let total = 0;
+    for (const item of form.itens) {
+        total += item.preco * item.quantidade;
+    }
+    return total;
+})
+
 const semCategoria = computed(() => props.categoria === '');
 
 const editing = ref(false);
@@ -41,7 +50,7 @@ const editing = ref(false);
             <div class="flex justify-between items-center">
                 <div>
                     <span class="text-gray-800">ID: {{ pedido.id }}</span>
-                    <span class="text-gray-800"> Aberto: {{ pedido.aberto ? "Sim" : "Não" }}</span>
+                    <span class="text-gray-800"> - Status: {{ pedido.aberto ? "Aberto" : "Fechado" }}</span>
                     <small class="ml-2 text-sm text-gray-600">{{ new Date(pedido.created_at).toLocaleString() }}</small>
                     <small v-if="pedido.created_at !== pedido.updated_at" class="text-sm text-gray-600"> &middot;
                         edited</small>
@@ -132,6 +141,7 @@ const editing = ref(false);
                         <span v-if="item.observacao"> - Observação: {{ item.observacao }}</span>
                     </li>
                 </ul>
+                <p class="text-lg text-gray-900">Total: R$ {{ totalPedido }}</p>
             </div>
         </div>
     </div>

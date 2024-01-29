@@ -14,6 +14,7 @@ const form = useForm({
     descricao: props.item.descricao,
     preco: props.item.preco,
     categoria: props.item.categoria,
+    estoque: props.item.estoque,
 });
 const semCategoria = computed(() => props.categoria === '');
 
@@ -60,6 +61,8 @@ const editing = ref(false);
                 <textarea v-model="form.categoria" class="mt-4 w-full text-gray-900 border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"></textarea>
                 <span>Preço</span>
                 <input v-model="form.preco" type="number" step="0.01" max="999.99" min="0.01" class="mt-4 w-full text-gray-900 border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"/>
+                <span>Estoque</span>
+                <input v-model="form.estoque" type="number" step="1" max="999" min="0" class="mt-4 w-full text-gray-900 border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"/>
                 <InputError :message="form.errors.message" class="mt-2" />
                 <div class="space-x-2">
                     <PrimaryButton class="mt-4">Save</PrimaryButton>
@@ -70,6 +73,7 @@ const editing = ref(false);
                 <p class="mt-4 text-lg text-gray-900">{{ item.categoria }}</p>
                 <p class="mt-4 text-lg text-gray-900">{{ item.descricao }}</p>
                 <p class="mt-4 text-lg text-gray-900">R$ {{ item.preco }}</p>
+                <p class="mt-4 text-lg text-gray-900">estoque {{ item.estoque }}</p>
             </div>
         </div>
     </div>

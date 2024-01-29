@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('descricao');
             $table->string('categoria');
             $table->decimal('preco', 6, 2);
+            $table->integer('estoque')->default(1);
             $table->timestamps();
         });
     }

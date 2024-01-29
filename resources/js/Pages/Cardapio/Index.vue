@@ -13,6 +13,7 @@ const form = useForm({
     descricao: '',
     categoria: '',
     preco: '',
+    estoque: '',
 });
 
 const categoriaSelecionada = ref('');
@@ -34,8 +35,10 @@ const editing = ref(false);
                 <textarea v-model="form.categoria" placeholder="Categoria do prato" required
                     class="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mb-1"></textarea>
                 <input v-model="form.preco" placeholder="Preço" required
-                    class="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"
+                    class="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mb-1"
                     type="number" step="0.01" />
+                <input v-model="form.estoque" placeholder="Estoque" type="number" step="1" max="999" min="0" required
+                    class="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mb-1" />
                 <InputError :message="form.errors.message" class="mt-2" />
                 <div class="space-x-2">
                     <PrimaryButton class="mt-4">Salvar</PrimaryButton>
@@ -54,4 +57,5 @@ const editing = ref(false);
                 <Item v-for="item in items" :key="item.id" :item="item" :categoria="categoriaSelecionada" />
             </div>
         </div>
-    </AuthenticatedLayout></template>
+    </AuthenticatedLayout>
+</template>

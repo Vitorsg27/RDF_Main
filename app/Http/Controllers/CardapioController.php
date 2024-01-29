@@ -41,7 +41,8 @@ class CardapioController extends Controller
             'nome' => 'required|string|max:255',
             'descricao' => 'required|string|max:255',
             'categoria' => 'required|string|max:255',
-            'preco' => ['required', 'numeric', 'regex:/^\d+(\.\d{1,2})?$/']
+            'preco' => ['required', 'numeric', 'regex:/^\d+(\.\d{1,2})?$/'],
+            'estoque' => 'required|numeric|min:0|max:999',
         ]);
  
         Cardapio::create($validated);
@@ -77,6 +78,7 @@ class CardapioController extends Controller
             'descricao' => 'required|string|max:255',
             'categoria' => 'required|string|max:255',
             'preco' => 'required|numeric|min:0.01|max:999.99',
+            'estoque' => 'required|numeric|min:0|max:999',
         ]);
  
         $cardapio->update($validated);

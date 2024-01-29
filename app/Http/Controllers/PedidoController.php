@@ -18,7 +18,7 @@ class PedidoController extends Controller
     public function index(): Response
     {
         $pedidos = Pedido::all();
-        $cardapio = Cardapio::all();
+        $cardapio = Cardapio::where('estoque', '>', 0)->get();
         $mesas = Mesa::all();
         return Inertia::render('Pedido/Index', [
             'pedidos' => $pedidos,
