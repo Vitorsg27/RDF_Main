@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\CardapioController;
 use App\Http\Controllers\MesaController;
-use App\Http\Controllers\PedidoController;
+use App\Http\Controllers\ComandaController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -48,7 +48,7 @@ Route::resource('mesa', MesaController::class)
     ->only(['index', 'store', 'update', 'destroy'])
     ->middleware(['auth', 'verified']);
 
-Route::resource('pedido', PedidoController::class)
+Route::resource('comanda', ComandaController::class)
     ->only(['index', 'store', 'update', 'destroy'])
     ->middleware(['auth', 'verified']);
 

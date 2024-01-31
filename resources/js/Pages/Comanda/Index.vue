@@ -1,12 +1,12 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import Pedido from '@/Components/Pedido.vue';
+import Comanda from '@/Components/Comanda.vue';
 import InputError from '@/Components/InputError.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import { useForm, Head } from '@inertiajs/vue3';
 import { ref } from 'vue';
 
-defineProps(['pedidos', 'produtos', 'mesas']);
+defineProps(['comandas', 'produtos', 'mesas']);
 
 const form = useForm({
     itens: [{
@@ -38,12 +38,12 @@ const editing = ref(false);
 </script>
  
 <template>
-    <Head title="Pedidos" />
+    <Head title="Comandas" />
 
     <AuthenticatedLayout>
         <div class="max-w-2xl mx-auto p-4 sm:p-6 lg:p-8">
             <form v-if="editing" class="bg-white shadow-sm rounded-lg p-4"
-                @submit.prevent="form.post(route('pedido.store'), { onSuccess: () => { form.reset(); editing = false; } })">
+                @submit.prevent="form.post(route('comanda.store'), { onSuccess: () => { form.reset(); editing = false; } })">
                 <div v-for="(item, index) in form.itens" :key="index" class="mt-4">
                     <select v-model="item.nome" @change="atualizarPreco(index, produtos)" required placeholder="Nome prato"
                         class="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
@@ -81,19 +81,19 @@ const editing = ref(false);
                     <button class="mt-4" @click="editing = false; form.reset(); form.clearErrors()">Cancel</button>
                 </div>
             </form>
-            <PrimaryButton v-if="editing == false" @click="editing = true" class="mt-4 ml-4">Novo Pedido</PrimaryButton>
+            <PrimaryButton v-if="editing == false" @click="editing = true" class="mt-4 ml-4">Nova Comanda</PrimaryButton>
             <select v-model="categoriaSelecionada"
                 class="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-6">
-                <option value="">Todos os Pedidos</option>
+                <option value="">Todos as Comandas</option>
                 <option :value="1">
-                    {{ "Pedidos em aberto" }}
+                    {{ "Comandas em aberto" }}
                 </option>
                 <option :value="0">
-                    {{ "Pedidos fechados" }}
+                    {{ "Comandas fechados" }}
                 </option>
             </select>
             <div class="mt-6 bg-white shadow-sm rounded-lg divide-y">
-                <Pedido v-for="pedido in pedidos" :key="pedido.id" :pedido="pedido" :produtos="produtos" :mesas="mesas" :categoria="categoriaSelecionada"/>
+                <Comanda v-for="comanda in comandas" :key="comanda.id" :comanda="comanda" :produtos="produtos" :mesas="mesas" :categoria="categoriaSelecionada"/>
             </div>
         </div>
     </AuthenticatedLayout>

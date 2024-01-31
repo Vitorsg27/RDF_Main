@@ -10,9 +10,9 @@ class Mesa extends Model
 {
     use HasFactory;
 
-    public function pedidos(): HasMany
+    public function comandas(): HasMany
     {
-        return $this->hasMany(Pedido::class);
+        return $this->hasMany(Comanda::class);
     }
 
     protected $fillable = ['disponivel'];

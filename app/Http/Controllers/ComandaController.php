@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Pedido;
+use App\Models\Comanda;
 use App\Models\Cardapio;
 use App\Models\Mesa;
 use Illuminate\Http\RedirectResponse;
@@ -10,18 +10,18 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class PedidoController extends Controller
+class ComandaController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index(): Response
     {
-        $pedidos = Pedido::all();
+        $comandas = Comanda::all();
         $cardapio = Cardapio::where('estoque', '>', 0)->get();
         $mesas = Mesa::all();
-        return Inertia::render('Pedido/Index', [
-            'pedidos' => $pedidos,
+        return Inertia::render('Comanda/Index', [
+            'comandas' => $comandas,
             'produtos' => $cardapio,
             'mesas' => $mesas
         ]);
@@ -51,15 +51,15 @@ class PedidoController extends Controller
 
         $validated['itens'] = json_encode($validated['itens']);
 
-        Pedido::create($validated);
+        Comanda::create($validated);
  
-        return redirect(route('pedido.index'));
+        return redirect(route('comanda.index'));
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Pedido $pedido)
+    public function show(Comanda $comanda)
     {
         //
     }
@@ -67,7 +67,7 @@ class PedidoController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Pedido $pedido)
+    public function edit(Comanda $comanda)
     {
         //
     }
@@ -75,7 +75,7 @@ class PedidoController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Pedido $pedido)
+    public function update(Request $request, Comanda $comanda)
     {
         $validated = $request->validate([
             'mesa_id' => 'required|exists:mesas,id|numeric',
@@ -89,20 +89,20 @@ class PedidoController extends Controller
     
         $validated['itens'] = json_encode($validated['itens']);
     
-        $pedido->update($validated);
+        $comanda->update($validated);
     
-        return redirect(route('pedido.index'));
+        return redirect(route('comanda.index'));
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Pedido $pedido)
+    public function destroy(Comanda $comanda)
     {
-        $this->authorize('delete', $pedido);
+        $this->authorize('delete', $comanda);
 
-        $pedido->delete();
+        $comanda->delete();
 
-        return redirect(route('pedido.index'));
+        return redirect(route('comanda.index'));
     }
 }

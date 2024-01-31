@@ -38,8 +38,8 @@ const showingNavigationDropdown = ref(false);
                                 <NavLink :href="route('mesa.index')" :active="route().current('mesa.index')">
                                     Mesas
                                 </NavLink>
-                                <NavLink :href="route('pedido.index')" :active="route().current('pedido.index')">
-                                    Pedidos
+                                <NavLink :href="route('comanda.index')" :active="route().current('comanda.index')">
+                                    Comandas
                                 </NavLink>
                             </div>
                         </div>
@@ -130,8 +130,8 @@ const showingNavigationDropdown = ref(false);
                         <ResponsiveNavLink :href="route('mesa.index')" :active="route().current('mesa.index')">
                             Mesas
                         </ResponsiveNavLink>
-                        <ResponsiveNavLink :href="route('pedido.index')" :active="route().current('pedido.index')">
-                            Pedidos
+                        <ResponsiveNavLink :href="route('comanda.index')" :active="route().current('comanda.index')">
+                            Comandas
                         </ResponsiveNavLink>
                     </div>
 
