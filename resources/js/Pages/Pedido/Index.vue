@@ -6,7 +6,7 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import { useForm, Head } from '@inertiajs/vue3';
 import { ref } from 'vue';
 
-defineProps(['pedidos']);
+defineProps(['pedidos', 'produtos', 'comandas']);
 
 const form = useForm({
     itens: [{
@@ -14,7 +14,7 @@ const form = useForm({
         quantidade: 1,
         preco: 0,
     }],
-    mesa_id: "",
+    comanda_id: "",
 });
 
 const adicionarItemVazio = () => {
@@ -41,7 +41,7 @@ const editing = ref(false);
     <Head title="Pedidos" />
 
     <AuthenticatedLayout>
-        <div>Index Pedido</div>
+        <!-- <span>{{comandas}}</span> -->
         <div class="max-w-2xl mx-auto p-4 sm:p-6 lg:p-8">
             <form v-if="editing" class="bg-white shadow-sm rounded-lg p-4"
                 @submit.prevent="form.post(route('pedido.store'), { onSuccess: () => { form.reset(); editing = false; } })">
@@ -68,11 +68,11 @@ const editing = ref(false);
                     <button @click="removerItem(index)" class="mt-2">Remover Item</button>
                 </div>
                 <button @click="adicionarItemVazio" class="mt-4">Adicionar Item</button>
-                <select v-model="form.mesa_id" required
+                <select v-model="form.comanda_id" required
                     class="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
                     <option value="" disabled selected hidden>Selecione a mesa</option>
-                    <option v-for="mesa in mesas" :key="mesa.id" :value="mesa.id">
-                        {{ mesa.id }}
+                    <option v-for="comanda in comandas" :key="comanda.id" :value="comanda.id">
+                        {{ comanda.mesa_id }}
                     </option>
                 </select>
 
@@ -82,7 +82,7 @@ const editing = ref(false);
                     <button class="mt-4" @click="editing = false; form.reset(); form.clearErrors()">Cancel</button>
                 </div>
             </form>
-            <PrimaryButton v-if="editing == false" @click="editing = true" class="mt-4 ml-4">Nova Comanda</PrimaryButton>
+            <PrimaryButton v-if="editing == false" @click="editing = true" class="mt-4 ml-4">Novo Pedido</PrimaryButton>
             <select v-model="categoriaSelecionada"
                 class="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-6">
                 <option value="">Todos as Comandas</option>
@@ -94,7 +94,7 @@ const editing = ref(false);
                 </option>
             </select>
             <div class="mt-6 bg-white shadow-sm rounded-lg divide-y">
-                <Pedido v-for="pedido in pedidos" :key="pedido.id" :pedido="pedido"/>
+                <Pedido v-for="pedido in pedidos" :key="pedido.id" :pedido="pedido" :produtos="produtos" :comandas="comandas" :categoria="categoriaSelecionada"/>
             </div>
         </div>
     </AuthenticatedLayout>

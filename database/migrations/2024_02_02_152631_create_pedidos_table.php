@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::create('pedidos', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('comanda_id')->constrained();
             $table->json('itens');
+            $table->boolean('aberto')->default(true);
             $table->timestamps();
         });
     }

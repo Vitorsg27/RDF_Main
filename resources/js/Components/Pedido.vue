@@ -7,12 +7,12 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import { useForm } from '@inertiajs/vue3';
 import { ref, computed } from 'vue';
 
-const props = defineProps(['comanda', 'produtos', 'mesas', 'categoria']);
+const props = defineProps(['pedido', 'produtos', 'comandas', 'categoria']);
 
 const form = useForm({
-    itens: JSON.parse(props.comanda.itens),
-    mesa_id: props.comanda.mesa_id,
-    aberto: props.comanda.aberto,
+    itens: JSON.parse(props.pedido.itens),
+    comanda_id: props.pedido.comanda_id,
+    aberto: props.pedido.aberto,
 });
 
 const adicionarItemVazio = () => {
@@ -31,13 +31,13 @@ const atualizarPreco = (index, produtos) => {
     }
 };
 
-const totalComanda = computed(() => {
-    let total = 0;
-    for (const item of form.itens) {
-        total += item.preco * item.quantidade;
-    }
-    return total;
-})
+// const totalComanda = computed(() => {
+//     let total = 0;
+//     for (const item of form.itens) {
+//         total += item.preco * item.quantidade;
+//     }
+//     return total;
+// })
 
 const semCategoria = computed(() => props.categoria === '');
 
@@ -45,15 +45,15 @@ const editing = ref(false);
 </script>
  
 <template>
-    <div>Componente Pedido</div>
-    <div v-if="semCategoria || comanda.aberto == categoria" class="p-6 flex space-x-2">
+    <span>{{comandas}}</span>
+    <div v-if="semCategoria || pedido.aberto == categoria" class="p-6 flex space-x-2">
         <div class="flex-1">
             <div class="flex justify-between items-center">
                 <div>
-                    <span class="text-gray-800">ID: {{ comanda.id }}</span>
-                    <span class="text-gray-800"> - Status: {{ comanda.aberto ? "Aberto" : "Fechado" }}</span>
-                    <small class="ml-2 text-sm text-gray-600">{{ new Date(comanda.created_at).toLocaleString() }}</small>
-                    <small v-if="comanda.created_at !== comanda.updated_at" class="text-sm text-gray-600"> &middot;
+                    <span class="text-gray-800">ID: {{ pedido.id }}</span>
+                    <span class="text-gray-800"> - Status: {{ pedido.aberto ? "Aberto" : "Fechado" }}</span>
+                    <small class="ml-2 text-sm text-gray-600">{{ new Date(pedido.created_at).toLocaleString() }}</small>
+                    <small v-if="pedido.created_at !== pedido.updated_at" class="text-sm text-gray-600"> &middot;
                         edited</small>
                 </div>
                 <Dropdown>
@@ -72,14 +72,14 @@ const editing = ref(false);
                             @click="editing = true">
                             Edit
                         </button>
-                        <DropdownLink as="button" :href="route('comanda.destroy', comanda.id)" method="delete">
+                        <DropdownLink as="button" :href="route('pedido.destroy', pedido.id)" method="delete">
                             Delete
                         </DropdownLink>
                     </template>
                 </Dropdown>
             </div>
             <form v-if="editing"
-                @submit.prevent="form.put(route('comanda.update', comanda.id), { onSuccess: () => editing = false })">
+                @submit.prevent="form.put(route('pedido.update', pedido.id), { onSuccess: () => editing = false })">
                 <div v-for="(item, index) in form.itens" :key="index" class="mt-8 p-4 border-2 rounded-lg">
                     <span>Produto</span>
                     <select v-model="item.nome" @change="atualizarPreco(index, produtos)" required placeholder="Nome prato"
@@ -110,11 +110,11 @@ const editing = ref(false);
                         Item</button>
                 </div>
                 <div class="mt-4">Mesa</div>
-                <select v-model="form.mesa_id" required
+                <select v-model="form.comanda_id" required
                     class="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
-                    <option value="comanda.mesa_id" disabled selected hidden>Selecione a mesa</option>
-                    <option v-for="mesa in mesas" :key="mesa.id" :value="mesa.id">
-                        {{ mesa.id }}
+                    <option value="pedido.comanda_id" disabled selected hidden>Selecione a mesa</option>
+                    <option v-for="comanda in comandas" :key="comanda.id" :value="comanda.id">
+                        {{ comanda.mesa_id }}
                     </option>
                 </select>
                 <span>Comanda ainda aberta? </span>
@@ -134,15 +134,15 @@ const editing = ref(false);
                 </div>
             </form>
             <div v-else>
-                <p class="mt-4 text-lg text-gray-900">Mesa: {{ form.mesa_id }}</p>
-                <p class="text-lg text-gray-900">Itens da Comanda:</p>
+                <p class="mt-4 text-lg text-gray-900">Mesa: {{ form.comanda_id }}</p>
+                <p class="text-lg text-gray-900">Itens do Pedido:</p>
                 <ul>
                     <li v-for="(item, index) in form.itens" :key="index">
                         {{ item.nome }} - Quantidade: {{ item.quantidade }} - Total: R$ {{ item.preco * item.quantidade }}
                         <span v-if="item.observacao"> - Observação: {{ item.observacao }}</span>
                     </li>
                 </ul>
-                <p class="text-lg text-gray-900">Total: R$ {{ totalComanda }}</p>
+                <!-- <p class="text-lg text-gray-900">Total: R$ {{ totalComanda }}</p> -->
             </div>
         </div>
     </div>
